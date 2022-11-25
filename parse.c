@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 09:42:32 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/17 13:27:17 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/25 17:19:25 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ static int	parse_specifier(t_tag *tag, t_buffer *buffer)
 	return (0);
 }
 
-int	parse_tag(t_tag *tag, t_buffer *buffer)
+int	parse_tag(t_buffer *buffer, t_tag *tag)
 {
 	init_tag(tag);
 	tag->range.start = buffer->size_actual;

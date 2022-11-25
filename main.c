@@ -5,7 +5,7 @@
 
 void	print_tag(t_tag *tag)
 {
-	char *prefixes[] = {"", "-", "+", " ", "0x"};
+	char *prefixes[] = {"", "-", "+", " ", "0x", "0X"};
 
 	printf("t_tag {\n");
 	printf("  properties:\n");
@@ -20,15 +20,11 @@ void	print_tag(t_tag *tag)
 	printf("  range:\n");
 	printf("    start:         %d\n", tag->range.start);
 	printf("    length:        %zu\n", tag->range.length);
-	printf("  parts:\n");
-	printf("    str:           '%s'\n", tag->parts.str);
-	printf("    pefix:         '%s'\n", prefixes[tag->parts.prefix]);
-	printf("    size_virtual:  %zu\n", tag->parts.size_virtual);
-	printf("    size_actual:   %zu\n", tag->parts.size_actual);
-	printf("  construct:\n");
-	printf("    str:           '%s'\n", tag->construct.str);
-	printf("    size_virtual:  %zu\n", tag->construct.size_virtual);
-	printf("    size_actual:   %zu\n", tag->construct.size_actual);
+	printf("  result:\n");
+	printf("    str:           '%s'\n", tag->result.str);
+	printf("    pefix:         '%s'\n", prefixes[tag->result.prefix]);
+	printf("    size_virtual:  %zu\n", tag->result.size_virtual);
+	printf("    size_actual:   %zu\n", tag->result.size_actual);
 	printf("}\n");
 }
 
@@ -40,17 +36,60 @@ int	main(void)
 	(void) tag;
 	(void) buffer;
 
-	const char *format = "%.5d";
-	if (init_buffer(&buffer, format))
-		return (1);
-	init_tag(&tag);
-	if (parse_tag(&tag, &buffer))
-		return (2);
-	tag.parts.str = strdup("1");
-	print_tag(&tag);
-	if (apply_precision(&tag))
-		return (3);
-	printf("%s\n", tag.construct.str);
+	const char *format = "%+d--";
+	// if (init_buffer(format, &buffer))
+	// 	return (1);
+	// init_tag(&tag);
+	// if (parse_tag(&buffer, &tag))
+	// 	return (2);
+	// tag.result.str = strdup("1");
+	// tag.result.prefix = PREFIX_0X_LOWER;
+	// tag.result.size_virtual = 1;
+	// tag.result.size_actual = 0;
+	// print_tag(&tag);
+	// if (apply_precision(&tag))
+	// 	return (3);
+	// if (apply_prefix(&tag))
+	// 	return (4);
+	// printf("%s\n", tag.result.str);
+
+	ft_printf(format, 5);
+
+	// printf("%.5%");
+
+	// printf("% u\n", 5);
+
+	// for(int i = 0; i < 32; i++)
+	// {
+	// 	// char *str = calloc(2, 1);
+	// 	// *str = (char) i;
+	// 	int n = printf("%3d ('%c' ", i, (char) i);
+	// 	printf("%d)\n", n);
+	// 	// free(str);
+	// }
+
+	// printf("%d\n", strlen("\x27"));
+	// printf("'%05c'\n", 31);
+
+	// char *str = malloc(20);
+	// itoa_base2(1589, "0123456789", &str);
+	// printf("%s\n", str);
+	// itoa_base2(-1589, "0123456789", &str);
+	// printf("%s\n", str);
+	// itoa_base2(0, "0123456789", &str);
+	// printf("%s\n", str);
+	// itoa_base2(-0, "0123456789", &str);
+	// printf("%s\n", str);
+	// itoa_base2(1589, "0123456789abcdef", &str);
+	// printf("%s\n", str);
+	// itoa_base2(-1589, "0123456789abcdef", &str);
+	// printf("%s\n", str);
+	// itoa_base2(1589, "0123456789abcdef", &str);
+	// printf("%s\n", str);
+	// itoa_base2(1589, "0123456789abcdef", &str);
+	// printf("%s\n", str);
+	// itoa_base2(1589, "0123456789abcdef", &str);
+	// printf("%s\n", str);
 
 	// if (advance_cursor(&buffer))
 	// 	return (2);

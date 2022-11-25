@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/24 16:48:39 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/25 17:30:59 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,67 @@ int	eval_char(int value, t_tag *tag)
 		return (1);
 	str[0] = (char) value;
 	str[1] = 0;
-	tag->parts.str = str;
-	tag->parts.size_virtual = 1;
-	tag->parts.size_actual = ft_isprint(value);
+	tag->result.str = str;
+	tag->result.size_virtual = 1;
+	tag->result.size_actual = !!value;
 	return (0);
 }
 
-int	ft_eval_str(t_tag *tag, char *value)
+int	eval_str(char *value, t_tag *tag)
 {
 	char	*str;
-	size_t	length;
 
 	if (strdup2(value, &str))
 		return (1);
-	length = ft_strlen(str);
-	tag->parts.str = str;
-	tag->parts.size_virtual = length;
-	tag->parts.size_actual = length;
+	set_result_str(str, tag);
+	return (0);
+}
+
+int	eval_hex(unsigned long value, t_tag *tag)
+{
+	char	*str;
+	char	*base;
+
+	base = "0123456789abcdef";
+	if (tag->properties.specifier == 'X')
+		base = "0123456789ABCDEF";
+	if (itoa_base2(value, base, &str))
+		return (1);
+	if (tag->properties.specifier == 'p')
+		tag->result.prefix = PREFIX_0X_LOWER;
+	else if (tag->properties.prefix)
+	{
+		tag->result.prefix = PREFIX_0X_LOWER;
+		if (tag->properties.specifier == 'X')
+			tag->result.prefix = PREFIX_0X_UPPER;
+	}
+	set_result_str(str, tag);
+	return (0);
+}
+
+int	eval_int(int value, t_tag *tag)
+{
+	unsigned int	uval;
+
+	uval = value;
+	if (value < 0)
+	{
+		uval = ~uval + 1;
+		tag->result.prefix = PREFIX_MINUS;
+	}
+	else if (tag->properties.plus)
+		tag->result.prefix = PREFIX_PLUS;
+	else if (tag->properties.space)
+		tag->result.prefix = PREFIX_SPACE;
+	return (eval_unsigned(uval, tag));
+}
+
+int	eval_unsigned(unsigned int value, t_tag *tag)
+{
+	char	*str;
+
+	if (itoa_base2(value, "0123456789", &str))
+		return (1);
+	set_result_str(str, tag);
 	return (0);
 }

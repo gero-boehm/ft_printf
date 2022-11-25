@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 12:31:09 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/24 16:29:29 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/25 17:34:40 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ enum e_prefix {
 	PREFIX_MINUS = 1,
 	PREFIX_PLUS = 2,
 	PREFIX_SPACE = 3,
-	PREFIX_0X = 4
+	PREFIX_0X_LOWER = 4,
+	PREFIX_0X_UPPER = 5
 };
 
 typedef struct s_buffer {
@@ -49,37 +50,48 @@ typedef struct s_range {
 	size_t			length;
 }	t_range;
 
-typedef struct s_parts {
+typedef struct s_result {
 	char			*str;
 	enum e_prefix	prefix;
 	size_t			size_virtual;
 	size_t			size_actual;
-}	t_parts;
-
-typedef struct s_construct {
-	char	*str;
-	size_t	size_virtual;
-	size_t	size_actual;
-}	t_construct;
+}	t_result;
 
 typedef struct s_tag {
 	t_properties	properties;
 	t_range			range;
-	t_parts			parts;
-	t_construct		construct;
+	t_result		result;
 }	t_tag;
+
+typedef struct s_struc {
+	int bla;
+	char *otherbla;
+}	t_struc;
 
 int		ft_printf(const char *format, ...);
 int		advance_cursor(t_buffer *buffer);
 int		apply_precision(t_tag *tag);
-int		init_buffer(t_buffer *buffer, const char *format);
+int		apply_prefix(t_tag *tag);
+int		init_buffer(const char *format, t_buffer *buffer);
 void	init_tag(t_tag *tag);
-int		parse_tag(t_tag *tag, t_buffer *buffer);
+int		parse_tag(t_buffer *buffer, t_tag *tag);
+
+struct struc fn();
+
+int		eval_char(int value, t_tag *tag);
+int		eval_str(char *value, t_tag *tag);
+int		eval_hex(unsigned long value, t_tag *tag);
+int		eval_int(int value, t_tag *tag);
+int		eval_unsigned(unsigned int value, t_tag *tag);
 
 void	increment_buffer_size(t_buffer *buffer);
 int		strdup2(const char *src, char **dst);
-int		padstr2(int padding, int right, int zeroes, char **str);
+int		substr2(unsigned int start, size_t length, char **str);
+int		padstr2(int padding, int right, int zeroes, t_result *result);
+// int		padstr2(int padding, int right, int zeroes, char **str);
 int		malloc2(size_t count, char **str);
+int		itoa_base2(unsigned long long value, char *base, char **str);
+void	set_result_str(char *str, t_tag *tag);
 
 
 // char	*ft_eval_char(t_tag *tag, int value);
