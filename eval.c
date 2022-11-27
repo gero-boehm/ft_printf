@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/25 17:30:59 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 15:29:19 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,16 @@ int	eval_str(char *value, t_tag *tag)
 {
 	char	*str;
 
-	if (strdup2(value, &str))
-		return (1);
+	if (value == NULL)
+	{
+		if (strdup2("(null)", &str))
+			return (1);
+	}
+	else
+	{
+		if (strdup2(value, &str))
+			return (2);
+	}
 	set_result_str(str, tag);
 	return (0);
 }
@@ -51,9 +59,12 @@ int	eval_hex(unsigned long value, t_tag *tag)
 		tag->result.prefix = PREFIX_0X_LOWER;
 	else if (tag->properties.prefix)
 	{
-		tag->result.prefix = PREFIX_0X_LOWER;
-		if (tag->properties.specifier == 'X')
-			tag->result.prefix = PREFIX_0X_UPPER;
+		if (value)
+		{
+			tag->result.prefix = PREFIX_0X_LOWER;
+			if (tag->properties.specifier == 'X')
+				tag->result.prefix = PREFIX_0X_UPPER;
+		}
 	}
 	set_result_str(str, tag);
 	return (0);

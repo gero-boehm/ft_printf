@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 12:31:09 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/25 17:34:40 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 14:51:53 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,19 @@
 // # define true 1;
 // # define false 0;
 
-enum e_prefix {
-	PREFIX_EMPTY = 0,
-	PREFIX_MINUS = 1,
-	PREFIX_PLUS = 2,
-	PREFIX_SPACE = 3,
-	PREFIX_0X_LOWER = 4,
-	PREFIX_0X_UPPER = 5
-};
+typedef enum e_padding_space {
+	LEAVE_SPACE,
+	LEAVE_NO_SPACE
+}	t_padding_space;
+
+typedef enum e_prefix {
+	PREFIX_EMPTY,
+	PREFIX_MINUS,
+	PREFIX_PLUS,
+	PREFIX_SPACE,
+	PREFIX_0X_LOWER,
+	PREFIX_0X_UPPER
+}	t_prefix;
 
 typedef struct s_buffer {
 	char	*str;
@@ -51,10 +56,10 @@ typedef struct s_range {
 }	t_range;
 
 typedef struct s_result {
-	char			*str;
-	enum e_prefix	prefix;
-	size_t			size_virtual;
-	size_t			size_actual;
+	char		*str;
+	t_prefix	prefix;
+	size_t		size_virtual;
+	size_t		size_actual;
 }	t_result;
 
 typedef struct s_tag {
@@ -62,11 +67,6 @@ typedef struct s_tag {
 	t_range			range;
 	t_result		result;
 }	t_tag;
-
-typedef struct s_struc {
-	int bla;
-	char *otherbla;
-}	t_struc;
 
 int		ft_printf(const char *format, ...);
 int		advance_cursor(t_buffer *buffer);
@@ -76,7 +76,13 @@ int		init_buffer(const char *format, t_buffer *buffer);
 void	init_tag(t_tag *tag);
 int		parse_tag(t_buffer *buffer, t_tag *tag);
 
-struct struc fn();
+int		is_char_specifier(t_tag *tag);
+int		is_str_specifier(t_tag *tag);
+int		is_ptr_specifier(t_tag *tag);
+int		is_hex_specifier(t_tag *tag);
+int		is_int_specifier(t_tag *tag);
+int		is_unsigned_specifier(t_tag *tag);
+int		is_percent_specifier(t_tag *tag);
 
 int		eval_char(int value, t_tag *tag);
 int		eval_str(char *value, t_tag *tag);
@@ -93,6 +99,10 @@ int		malloc2(size_t count, char **str);
 int		itoa_base2(unsigned long long value, char *base, char **str);
 void	set_result_str(char *str, t_tag *tag);
 
+int		get_str_for_prefix2(t_prefix prefix, char **str);
+int		get_prefix_length(t_prefix prefix);
+
+int		prepare_str(t_tag *tag);
 
 // char	*ft_eval_char(t_tag *tag, int value);
 // char	*ft_eval_str(t_tag *tag, char *value);

@@ -6,17 +6,14 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:52:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/25 17:38:16 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 14:51:37 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdarg.h>
 #include <stdlib.h>
-#include "include/ft_printf.h"
+#include "ft_printf.h"
 #include "libft/libft.h"
-
-#include <stdio.h>
-
 
 void	strass2(char *src, char **dst)
 {
@@ -83,98 +80,52 @@ int	max(int a, int b)
 	return (b);
 }
 
+int	min(int a, int b)
+{
+	if (a < b)
+		return (a);
+	return (b);
+}
+
 int	ignores_precision(char c)
 {
-	return (c == 'c' || c == 'p' || c == '%');
+	return (c == 'c' || c == '%');
 }
 
 int evaluate(va_list args, t_tag *tag)
 {
-	if (tag->properties.specifier == 'c')
+	if (is_char_specifier(tag))
 		return (eval_char(va_arg(args, int), tag));
-	if (tag->properties.specifier == 's')
+	if (is_str_specifier(tag))
 		return (eval_str(va_arg(args, char *), tag));
-	if (tag->properties.specifier == 'p')
+	if (is_ptr_specifier(tag))
 		return (eval_hex(va_arg(args, unsigned long), tag));
-	if (tag->properties.specifier == 'd')
+	if (is_hex_specifier(tag))
+		return (eval_hex(va_arg(args, unsigned int), tag));
+	if (is_int_specifier(tag))
 		return (eval_int(va_arg(args, int), tag));
-	if (tag->properties.specifier == 'i')
-		return (eval_int(va_arg(args, int), tag));
-	if (tag->properties.specifier == 'u')
+	if (is_unsigned_specifier(tag))
 		return (eval_unsigned(va_arg(args, unsigned int), tag));
-	if (tag->properties.specifier == 'x')
-		return (eval_hex(va_arg(args, unsigned long), tag));
-	if (tag->properties.specifier == 'X')
-		return (eval_hex(va_arg(args, unsigned long), tag));
-	if (tag->properties.specifier == '%')
+	if (is_percent_specifier(tag))
 		return (eval_char('%', tag));
 	return (1);
 }
 
-// int	prepare_str(t_tag *tag)
-// {
-// 	size_t	length;
-
-// 	length = ft_strlen(tag->parts.str);
-// 	if (tag->properties.specifier == 's' && tag->properties.precision != -1
-// 		&& tag->properties.precision < length)
-// 		length = tag->properties.precision;
-// 	if (ignores_precision(tag->properties.precision))
-// 		length = max(length, tag->properties.precision);
-// 	length += ft_strlen(tag->parts.prefix);
-// 	length = max(length, tag->properties.padding);
-// 	if (malloc2(length + 1, &tag->construct.str))
-// 		return (1);
-// 	tag->construct.str[length] = 0;
-// 	// tag->construct.length = length;
-// 	return (0);
-// }
-
-// int	padstr3(int padding, int right, int zeroes, char **str)
-// {
-// 	size_t	i;
-// 	size_t	length;
-// 	int		offset;
-// 	char	*new;
-// 	char	c;
-
-// 	length = ft_strlen(*str);
-// 	offset = padding - length;
-// 	if (offset <= 0)
-// 		return (0);
-// 	if (right)
-// 		offset = 0;
-// 	if (malloc2(padding + 1, &new))
-// 		return (1);
-// 	new[padding] = 0;
-// 	c = ' ';
-// 	if (zeroes)
-// 		c = '0';
-// 	i = 0;
-// 	while (i < padding)
-// 	{
-// 		if (i >= offset && i < offset + length)
-// 			new[i] = (*str)[i - offset];
-// 		else
-// 			new[i] = c;
-// 		i++;
-// 	}
-// 	strass2(new, str);
-// 	return (0);
-// }
-
 int	padstr2(int padding, int right, int zeroes, t_result *result)
 {
-	size_t	i;
+	int		i;
 	size_t	length;
 	int		offset;
 	char	*new;
 	char	c;
 
 	// printf("%zu\n", result->size_virtual);
-	offset = padding - result->size_virtual;
+	length = result->size_virtual;
+	offset = padding - length;
 	if (offset <= 0)
 		return (0);
+	result->size_virtual += offset;
+	result->size_actual += offset;
 	if (right)
 		offset = 0;
 	if (malloc2(padding + 1, &new))
@@ -186,7 +137,7 @@ int	padstr2(int padding, int right, int zeroes, t_result *result)
 	i = 0;
 	while (i < padding)
 	{
-		if (i >= offset && i < offset + result->size_virtual)
+		if (i >= offset && i < (int) (offset + length))
 			new[i] = result->str[i - offset];
 		else
 			new[i] = c;
@@ -198,16 +149,26 @@ int	padstr2(int padding, int right, int zeroes, t_result *result)
 
 int apply_precision(t_tag *tag)
 {
+	int	difference;
+
 	if (tag->properties.precision == -1)
 		return (0);
 	if (tag->properties.specifier == 's')
 	{
+		// difference = ft_strlen(tag->result.str) - tag->properties.precision;
+		difference = tag->result.size_virtual - tag->properties.precision;
+		if (difference > 0)
+		{
+			tag->result.size_virtual -= difference;
+			tag->result.size_actual -= difference;
+		}
 		if (substr2(0, tag->properties.precision, &tag->result.str))
 			return (2);
 		return (0);
 	}
-	if (ignores_precision(tag->properties.specifier))
+	if (is_char_specifier(tag))
 		return (0);
+	// printf("%c\n", tag->properties.specifier);
 	if (padstr2(tag->properties.precision, 0, 1, &tag->result))
 		return (2);
 	return (0);
@@ -224,21 +185,45 @@ int	strapp2(char *src, char **dst)
 
 int	apply_prefix(t_tag *tag)
 {
-	const char	*prefixes[] = {"", "-", "+", " ", "0x", "0X"};
-	size_t		length;
+	char	*prefix;
+	int		length;
 
-	if (strapp2(prefixes[tag->result.prefix], &tag->result.str))
+	if (get_str_for_prefix2(tag->result.prefix, &prefix))
 		return (1);
-	length = ft_strlen(prefixes[tag->result.prefix]);
-	tag->result.size_virtual = length;
-	tag->result.size_actual = length;
+	if (strapp2(prefix, &tag->result.str))
+		return (free(prefix), 2);
+	free(prefix);
+	length = get_prefix_length(tag->result.prefix);
+	tag->result.size_virtual += length;
+	tag->result.size_actual += length;
 	return (0);
 }
 
-int	apply_padding(t_tag *tag)
+int	is_num_specifier(t_tag *tag)
 {
-	if (padstr2(tag->properties.padding, tag->properties.left_justify,
-			tag->properties.zeroes, &tag->result))
+	if (is_int_specifier(tag))
+		return (1);
+	if (is_unsigned_specifier(tag))
+		return (1);
+	if (is_hex_specifier(tag))
+		return (1);
+	return (0);
+}
+
+int	apply_padding(t_padding_space leave_space, t_tag *tag)
+{
+	int	zeroes;
+	int	space;
+
+	zeroes = tag->properties.zeroes;
+	if (tag->properties.left_justify
+		|| (is_num_specifier(tag) && tag->properties.precision != -1))
+		zeroes = 0;
+	space = 0;
+	if (leave_space == LEAVE_SPACE)
+		space = get_prefix_length(tag->result.prefix);
+	if (padstr2(tag->properties.padding - space, tag->properties.left_justify,
+			zeroes, &tag->result))
 		return (1);
 	return (0);
 }
@@ -270,7 +255,7 @@ int	strsub2(unsigned int position, size_t length, char *sub, char **str)
 	cursor_sub = sub;
 	while (*cursor_sub)
 		result[i++] = *cursor_sub++;
-	// free(sub);
+	free(sub);
 	cursor += length;
 	while (i < total_length)
 		result[i++] = *cursor++;
@@ -288,6 +273,85 @@ int	substitute(t_tag *tag, t_buffer *buffer)
 	return (0);
 }
 
+// int	get_length_after_precision(t_tag *tag)
+// {
+// 	if (is_str_specifier(tag))
+// 		return (min(tag->result.size_virtual, tag->properties.precision));
+// 	return (max(tag->result.size_virtual, tag->properties.precision));
+// }
+
+// int	get_length_after_prefix(t_tag *tag, size_t length)
+// {
+// 	return (length + get_prefix_length(tag->result.prefix));
+// }
+
+// int	get_length_after_padding(t_tag *tag, size_t length)
+// {
+// 	return (max(length, tag->properties.padding));
+// }
+
+// int	prepare_str(t_tag *tag)
+// {
+// 	size_t	length;
+
+// 	length = get_length_after_precision(tag);
+// 	length = get_length_after_length(tag, length);
+// 	length = get_length_after_padding(tag, length);
+// 	if (malloc2(length + 1, &tag->result.str))
+// 		return (1);
+// 	return (0);
+// }
+
+// int	strins2(char *src, unsigned int start, size_t length, char **dst)
+// {
+// 	size_t	i;
+
+// 	i = 0;
+// 	while (i < length && src[i] && (*dst)[i + start])
+// 	{
+// 		(*dst)[i + start] = src[i];
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+// int	insert_str(t_tag *tag)
+// {
+// 	size_t length;
+
+// 	length = tag->result.size_virtual;
+// 	if (is_str_specifier(tag))
+// 		length = get_length_after_precision(tag);
+
+// }
+
+int	is_padding_between_prefix_and_str(t_tag *tag)
+{
+	return (tag->properties.precision == -1 && tag->properties.zeroes
+		&& !tag->properties.left_justify);
+}
+
+int	apply_flags(t_tag *tag)
+{
+	if (apply_precision(tag))
+		return (1);
+	if (is_padding_between_prefix_and_str(tag))
+	{
+		if (apply_padding(LEAVE_SPACE, tag))
+			return (2);
+		if (apply_prefix(tag))
+			return (3);
+	}
+	else
+	{
+		if (apply_prefix(tag))
+			return (4);
+		if (apply_padding(LEAVE_NO_SPACE, tag))
+			return (5);
+	}
+	return (0);
+}
+
 int	run(va_list args, t_buffer *buffer)
 {
 	t_tag	tag;
@@ -300,14 +364,10 @@ int	run(va_list args, t_buffer *buffer)
 			return (1);
 		if (evaluate(args, &tag))
 			return (2);
-		if (apply_precision(&tag))
+		if (apply_flags(&tag))
 			return (3);
-		if (apply_prefix(&tag))
-			return (4);
-		if (apply_padding(&tag))
-			return (5);
 		if (substitute(&tag, buffer))
-			return (6);
+			return (4);
 	}
 	return (0);
 }

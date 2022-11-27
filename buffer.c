@@ -6,11 +6,11 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 09:53:53 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/25 17:35:08 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 13:52:14 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
+#include "ft_printf.h"
 
 int	init_buffer(const char *format, t_buffer *buffer)
 {

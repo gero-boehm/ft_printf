@@ -6,11 +6,11 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 09:42:32 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/25 17:19:25 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 14:17:15 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
+#include "ft_printf.h"
 #include "libft/libft.h"
 
 #include <stdio.h>
@@ -24,7 +24,7 @@ static char	get_char(t_tag *tag, t_buffer *buffer)
 {
 	unsigned int	i;
 
-	i = buffer->size_actual + tag->range.start + tag->range.length;
+	i = tag->range.start + tag->range.length;
 	return (buffer->str[i]);
 }
 
@@ -102,7 +102,6 @@ static int	parse_specifier(t_tag *tag, t_buffer *buffer)
 	char	c;
 
 	c = get_char(tag, buffer);
-	printf("%c\n", c);
 	if (!is_specifier(c))
 		return (1);
 	tag->properties.specifier = c;

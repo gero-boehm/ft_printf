@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 
 void	print_tag(t_tag *tag)
 {
@@ -22,7 +23,7 @@ void	print_tag(t_tag *tag)
 	printf("    length:        %zu\n", tag->range.length);
 	printf("  result:\n");
 	printf("    str:           '%s'\n", tag->result.str);
-	printf("    pefix:         '%s'\n", prefixes[tag->result.prefix]);
+	printf("    prefix:        '%s'\n", prefixes[tag->result.prefix]);
 	printf("    size_virtual:  %zu\n", tag->result.size_virtual);
 	printf("    size_actual:   %zu\n", tag->result.size_actual);
 	printf("}\n");
@@ -36,16 +37,17 @@ int	main(void)
 	(void) tag;
 	(void) buffer;
 
-	const char *format = "%+d--";
+	// const char *format = "%+.2d\n";
 	// if (init_buffer(format, &buffer))
 	// 	return (1);
 	// init_tag(&tag);
 	// if (parse_tag(&buffer, &tag))
 	// 	return (2);
-	// tag.result.str = strdup("1");
+	// tag.result.str = strdup("100");
 	// tag.result.prefix = PREFIX_0X_LOWER;
-	// tag.result.size_virtual = 1;
-	// tag.result.size_actual = 0;
+	// tag.result.size_virtual = 3;
+	// tag.result.size_actual = 3;
+	// prepare_str(&tag);
 	// print_tag(&tag);
 	// if (apply_precision(&tag))
 	// 	return (3);
@@ -53,7 +55,396 @@ int	main(void)
 	// 	return (4);
 	// printf("%s\n", tag.result.str);
 
-	ft_printf(format, 5);
+	// ft_printf(format, 5);
+
+	// int n;
+
+	// (void) n;
+
+	// printf("====================\n");
+	// n = printf("%020s\n", "abcdefghi");
+	// printf("%d\n", n);
+	// n = printf("%020.3s\n", "abcdefghi");
+	// printf("%d\n", n);
+	// n = printf("%+.3d\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%0+20.3d\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%+.3i\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%0+20.3i\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%+.3u\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%0+20.3u\n", 5);
+	// printf("%d\n", n);
+	// n = printf("%+.3x\n", 15);
+	// printf("%d\n", n);
+	// n = printf("%0+20.3x\n", 15);
+	// printf("%d\n", n);
+	// n = printf("%+.3p\n", 15);
+	// printf("%d\n", n);
+	// n = printf("%0+20.3p\n", 15);
+	// printf("%d\n", n);
+	// n = printf("%+.5c\n", 49);
+	// printf("%d\n", n);
+	// n = printf("%0+20.5c\n", 49);
+	// printf("%d\n", n);
+	// printf("====================\n");
+	// n = ft_printf("%020s\n", "abcdefghi");
+	// printf("%d\n", n);
+	// n = ft_printf("%020.3s\n", "abcdefghi");
+	// printf("%d\n", n);
+	// n = ft_printf("%+.3d\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.3d\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%+.3i\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.3i\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%+.3u\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.3u\n", 5);
+	// printf("%d\n", n);
+	// n = ft_printf("%+.3x\n", 15);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.3x\n", 15);
+	// printf("%d\n", n);
+	// n = ft_printf("%+.3p\n", 15);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.3p\n", 15);
+	// printf("%d\n", n);
+	// n = ft_printf("%+.5c\n", 49);
+	// printf("%d\n", n);
+	// n = ft_printf("%0+20.5c\n", 49);
+	// printf("%d\n", n);
+
+	// printf(" %d\n", printf("'%c'", 0));
+	// printf(" %d\n", ft_printf("'%c'", 0));
+
+	// ft_printf("-%010d-%.5d-%+d-\n", 1, 2, 3);
+	// printf("-%010d-%.5d-%+d-\n", 1, 2, 3);
+
+	int ntest = 0;
+	{
+		const char *format = "'%0 10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%0+10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'% 10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'% +10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%-+10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'% -10d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%+-010d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%+10.5d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%0+10.5d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%0+-10.5d'\n";
+		int arg1 = 5;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%c%c%c'\n";
+		int arg1 = 0;
+		int arg2 = 0;
+		int arg3 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "'%c%c%c'\n";
+		int arg1 = 27;
+		int arg2 = 27;
+		int arg3 = 27;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("l: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("l: %d\n", b);
+	}
+	{
+		const char *format = "' %c %c %c '";
+		int arg1 = '0';
+		int arg2 = 0;
+		int arg3 = '1';
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "' %c %c %c '";
+		int arg1 = '2';
+		int arg2 = '1';
+		int arg3 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "' %c %c %c '";
+		int arg1 = 0;
+		int arg2 = '1';
+		int arg3 = '2';
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = " NULL %s NULL ";
+		char *arg1 = NULL;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = " %x ";
+		long arg1 = LONG_MAX;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		// const char *format = " %% ";
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(" %% ");
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(" %% ");
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "%%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %%%c%%%s%%%d%%%i%%%u%%%x%%%X%%%% %c%%";
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, 'A', "42", 42, 42, 42, 42, 42, 'B', "-42", -42, -42, -42, -42, 42, 'C', "0", 0, 0, 0, 0, 42, 0);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, 'A', "42", 42, 42, 42, 42, 42, 'B', "-42", -42, -42, -42, -42, 42, 'C', "0", 0, 0, 0, 0, 42, 0);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = " %#x ";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = " %#x ";
+		int arg1 = 1;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = " %p ";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+
+	// printf("%0 10d\n", 5);
+	// ft_printf("%0 10d\n", 5);
+	// printf("%0+10d\n", 5);
+	// ft_printf("%0+10d\n", 5);
+
+	// printf("% 10d\n", 5);
+	// ft_printf("% 10d\n", 5);
+	// printf("%+10d\n", 5);
+	// ft_printf("%+10d\n", 5);
+	// printf("%0 10d\n", 5);
+	// ft_printf("%0 10d\n", 5);
+	// printf("%05c\n", 0);
+	// ft_printf("%05c\n", 0);
+
+	// printf("%.3c\n", 'c');
+	// printf("%.3s\n", "abcdef");
+	// printf("%.30p\n", 15489856);
+	// printf("%.3d\n", 1);
+	// printf("%.3i\n", 1);
+	// printf("%.3u\n", 1);
+	// printf("%.3x\n", 1);
+	// printf("%.3X\n", 1);
+	// printf("%.3%\n");
+
+	// printf("%010c\n", 'c');
+	// printf("%010s\n", "abcdef");
+	// printf("%010p\n", 15489856);
+	// printf("%010d\n", 1);
+	// printf("%010i\n", 1);
+	// printf("%010u\n", 1);
+	// printf("%010x\n", 1);
+	// printf("%010X\n", 1);
+	// printf("%010%\n");
+
+	// printf("%10c\n", 'c');
+	// printf("%10s\n", "abcdef");
+	// printf("%10p\n", 15489856);
+	// printf("%10d\n", 1);
+	// printf("%10i\n", 1);
+	// printf("%10u\n", 1);
+	// printf("%10x\n", 1);
+	// printf("%10X\n", 1);
+	// printf("%10%\n");
+
+	// printf("%.10s\n", "abcdef");
 
 	// printf("%.5%");
 
