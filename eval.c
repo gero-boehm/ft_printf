@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 15:29:19 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/27 16:03:59 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,16 @@ int	eval_hex(unsigned long value, t_tag *tag)
 	base = "0123456789abcdef";
 	if (tag->properties.specifier == 'X')
 		base = "0123456789ABCDEF";
-	if (itoa_base2(value, base, &str))
-		return (1);
+	if (value == 0 && tag->properties.precision == 0)
+	{
+		if (strdup2("", &str))
+			return (1);
+	}
+	else
+	{
+		if (itoa_base2(value, base, &str))
+			return (2);
+	}
 	if (tag->properties.specifier == 'p')
 		tag->result.prefix = PREFIX_0X_LOWER;
 	else if (tag->properties.prefix)
@@ -91,8 +99,16 @@ int	eval_unsigned(unsigned int value, t_tag *tag)
 {
 	char	*str;
 
-	if (itoa_base2(value, "0123456789", &str))
-		return (1);
+	if (value == 0 && tag->properties.precision == 0)
+	{
+		if (strdup2("", &str))
+			return (1);
+	}
+	else
+	{
+		if (itoa_base2(value, "0123456789", &str))
+			return (2);
+	}
 	set_result_str(str, tag);
 	return (0);
 }

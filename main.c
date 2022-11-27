@@ -399,6 +399,54 @@ int	main(void)
 		int b = ft_printf(format, arg1);
 		printf("\nl: %d\n", b);
 	}
+	{
+		const char *format = "%.d";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "%.u";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "%#.x";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "%#.p";
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
 
 	// printf("%0 10d\n", 5);
 	// ft_printf("%0 10d\n", 5);
