@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/26 12:31:09 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 14:51:53 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/29 09:54:00 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ typedef enum e_prefix {
 }	t_prefix;
 
 typedef struct s_buffer {
-	char	*str;
-	int		size_virtual;
-	int		size_actual;
+	char			*str;
+	size_t			size;
+	unsigned long	cursor;
 }	t_buffer;
 
 typedef struct s_properties {
@@ -51,15 +51,14 @@ typedef struct s_properties {
 }	t_properties;
 
 typedef struct s_range {
-	unsigned int	start;
+	unsigned long	start;
 	size_t			length;
 }	t_range;
 
 typedef struct s_result {
 	char		*str;
 	t_prefix	prefix;
-	size_t		size_virtual;
-	size_t		size_actual;
+	size_t		size;
 }	t_result;
 
 typedef struct s_tag {

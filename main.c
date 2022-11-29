@@ -1,8 +1,9 @@
-#include "include/ft_printf.h"
+#include "ft_printf.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <unistd.h>
 
 void	print_tag(t_tag *tag)
 {
@@ -19,13 +20,14 @@ void	print_tag(t_tag *tag)
 	printf("    precision:     %d\n", tag->properties.precision);
 	printf("    specifier:     %c\n", tag->properties.specifier);
 	printf("  range:\n");
-	printf("    start:         %d\n", tag->range.start);
+	printf("    start:         %lu\n", tag->range.start);
 	printf("    length:        %zu\n", tag->range.length);
 	printf("  result:\n");
 	printf("    str:           '%s'\n", tag->result.str);
 	printf("    prefix:        '%s'\n", prefixes[tag->result.prefix]);
-	printf("    size_virtual:  %zu\n", tag->result.size_virtual);
-	printf("    size_actual:   %zu\n", tag->result.size_actual);
+	// printf("    size_virtual:  %zu\n", tag->result.size_virtual);
+	// printf("    size_actual:   %zu\n", tag->result.size_actual);
+	printf("    size:          %zu\n", tag->result.size);
 	printf("}\n");
 }
 
@@ -447,6 +449,62 @@ int	main(void)
 		int b = ft_printf(format, arg1);
 		printf("\nl: %d\n", b);
 	}
+	{
+		const char *format = "%05c d";
+		// int arg1 = 49;
+		int arg1 = 0;
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1);
+		printf("\nl: %d\n", b);
+	}
+	{
+		const char *format = "' %c %c %c '";
+		int arg1 = 0;
+		int arg2 = '1';
+		int arg3 = '2';
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf(format, arg1, arg2, arg3);
+		printf("\nl: %d\n", b);
+	}
+	{
+		// const char *format = "%-58.131%";
+
+		printf("\n== TEST %03d =============\n", ntest++);
+		printf("o: ");
+		int a = printf("%-58.131%");
+		printf("\nl: %d\n", a);
+		ft_printf("c: ");
+		int b = ft_printf("%-58.131%");
+		printf("\nl: %d\n", b);
+	}
+
+	ft_printf("%.10%\n");
+
+
+	// {
+	// 	const char *format = "d";
+	// 	int arg1 = 49;
+
+	// 	printf("\n== TEST %03d =============\n", ntest++);
+	// 	printf("o: ");
+	// 	int a = printf(format, arg1);
+	// 	printf("\nl: %d\n", a);
+	// 	ft_printf("c: ");
+	// 	int b = ft_printf(format, arg1);
+	// 	printf("\nl: %d\n", b);
+	// }
+
+	// write(1, " 1 \0 2 ", 7);
 
 	// printf("%0 10d\n", 5);
 	// ft_printf("%0 10d\n", 5);

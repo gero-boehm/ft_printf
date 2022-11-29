@@ -6,12 +6,12 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 16:03:59 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/29 13:12:38 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
-#include "libft/libft.h"
+#include "ft_printf.h"
+#include "libft.h"
 
 int	eval_char(int value, t_tag *tag)
 {
@@ -22,8 +22,7 @@ int	eval_char(int value, t_tag *tag)
 	str[0] = (char) value;
 	str[1] = 0;
 	tag->result.str = str;
-	tag->result.size_virtual = 1;
-	tag->result.size_actual = !!value;
+	tag->result.size = 1;
 	return (0);
 }
 

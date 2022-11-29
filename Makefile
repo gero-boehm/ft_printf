@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -I include
+CFLAGS=-Wall -Wextra -Werror -I include -g
 NAME=libftprintf.a
 SRC=ft_printf.c parse.c buffer.c eval.c eval_utils.c specifier_checks.c prefix.c
 OBJ=$(SRC:.c=.o)
@@ -19,8 +19,11 @@ $(NAME): $(OBJ) | libft/libft.a
 
 bonus: all
 
-test: $(OBJ) main.o libft/libft.a
-	$(CC) $(CFLAGS) -o $@ $^ && ./test
+compile: $(OBJ) main.o libft/libft.a
+	$(CC) $(CFLAGS) $^
+
+test: compile
+	./a.out
 
 clean:
 	rm -f *.o
@@ -31,4 +34,4 @@ fclean: clean
 re: fclean all
 
 .PHONY:
-	all bonus clean fclean re test
+	all bonus clean fclean re compile test

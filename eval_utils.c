@@ -6,12 +6,12 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 10:13:42 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 16:10:07 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/29 13:11:49 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/ft_printf.h"
-#include "libft/libft.h"
+#include "ft_printf.h"
+#include "libft.h"
 
 static int	recurse_base(unsigned long long value, char *base,
 	size_t base_size, char *buffer)
@@ -55,6 +55,5 @@ void	set_result_str(char *str, t_tag *tag)
 
 	length = ft_strlen(str);
 	tag->result.str = str;
-	tag->result.size_virtual = length;
-	tag->result.size_actual = length;
+	tag->result.size = length;
 }

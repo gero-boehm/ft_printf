@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:52:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 15:46:31 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/29 11:44:27 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,11 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include "ft_printf.h"
-#include "libft/libft.h"
+#include "libft.h"
+
+
+#include <stdio.h>
+
 
 void	strass2(char *src, char **dst)
 {
@@ -47,12 +51,9 @@ int	advance_cursor(t_buffer *buffer)
 {
 	char	c;
 
-	c = buffer->str[buffer->size_actual];
+	c = buffer->str[buffer->cursor];
 	while (c && c != '%')
-	{
-		increment_buffer_size(buffer);
-		c = buffer->str[buffer->size_actual];
-	}
+		c = buffer->str[++buffer->cursor];
 	return (!c);
 }
 
@@ -70,8 +71,7 @@ void	init_tag(t_tag *tag)
 	tag->range.length = 0;
 	tag->result.str = NULL;
 	tag->result.prefix = PREFIX_EMPTY;
-	tag->result.size_virtual = 0;
-	tag->result.size_actual = 0;
+	tag->result.size = 0;
 }
 
 int	max(int a, int b)
@@ -121,12 +121,11 @@ int	padstr2(int padding, int right, int zeroes, t_result *result)
 	char	c;
 
 	// printf("%zu\n", result->size_virtual);
-	length = result->size_virtual;
+	length = result->size;
 	offset = padding - length;
 	if (offset <= 0)
 		return (0);
-	result->size_virtual += offset;
-	result->size_actual += offset;
+	result->size += offset;
 	if (right)
 		offset = 0;
 	if (malloc2(padding + 1, &new))
@@ -157,17 +156,14 @@ int apply_precision(t_tag *tag)
 	if (tag->properties.specifier == 's')
 	{
 		// difference = ft_strlen(tag->result.str) - tag->properties.precision;
-		difference = tag->result.size_virtual - tag->properties.precision;
+		difference = tag->result.size - tag->properties.precision;
 		if (difference > 0)
-		{
-			tag->result.size_virtual -= difference;
-			tag->result.size_actual -= difference;
-		}
+			tag->result.size -= difference;
 		if (substr2(0, tag->properties.precision, &tag->result.str))
 			return (2);
 		return (0);
 	}
-	if (is_char_specifier(tag))
+	if (is_char_specifier(tag) || is_percent_specifier(tag))
 		return (0);
 	// printf("%c\n", tag->properties.specifier);
 	if (padstr2(tag->properties.precision, 0, 1, &tag->result))
@@ -189,14 +185,15 @@ int	apply_prefix(t_tag *tag)
 	char	*prefix;
 	int		length;
 
+	if (tag->result.prefix == PREFIX_EMPTY)
+		return (0);
 	if (get_str_for_prefix2(tag->result.prefix, &prefix))
 		return (1);
 	if (strapp2(prefix, &tag->result.str))
 		return (free(prefix), 2);
 	free(prefix);
 	length = get_prefix_length(tag->result.prefix);
-	tag->result.size_virtual += length;
-	tag->result.size_actual += length;
+	tag->result.size += length;
 	return (0);
 }
 
@@ -229,48 +226,83 @@ int	apply_padding(t_padding_space leave_space, t_tag *tag)
 	return (0);
 }
 
-int	strsub2(unsigned int position, size_t length, char *sub, char **str)
-{
-	unsigned int	i;
-	size_t			str_length;
-	size_t			sub_length;
-	size_t			total_length;
-	char			*result;
-	char			*cursor;
-	char			*cursor_sub;
+// int	strsub2(unsigned long position, size_t length, char *sub, char **str)
+// {
+// 	unsigned long	i;
+// 	size_t			str_length;
+// 	size_t			sub_length;
+// 	size_t			total_length;
+// 	char			*result;
+// 	char			*cursor;
+// 	char			*cursor_sub;
 
-	str_length = ft_strlen(*str);
-	if (position > str_length)
-		return (1);
-	if (str_length - position < length)
-		length = str_length - position;
-	sub_length = ft_strlen(sub);
-	total_length = str_length - length + sub_length;
-	if (malloc2(total_length + 1, &result))
-		return (2);
-	result[total_length] = 0;
-	cursor = *str;
+// 	str_length = ft_strlen(*str);
+// 	if (position > str_length)
+// 		return (1);
+// 	if (str_length - position < length)
+// 		length = str_length - position;
+// 	sub_length = ft_strlen(sub);
+// 	total_length = str_length - length + sub_length;
+// 	if (malloc2(total_length + 1, &result))
+// 		return (2);
+// 	result[total_length] = 0;
+// 	cursor = *str;
+// 	i = 0;
+// 	while (i < position)
+// 		result[i++] = *cursor++;
+// 	cursor_sub = sub;
+// 	printf("AAAAA %zu %zu %zu\n", i, position, length);
+// 	while (i - position < length)
+// 	{
+// 		result[i] = sub[i - position];
+// 		i++;
+// 	}
+// 	free(sub);
+// 	cursor += length;
+// 	while (i < total_length)
+// 		result[i++] = *cursor++;
+// 	strass2(result, str);
+// 	return (0);
+// }
+
+void	strins(char *src, size_t length, char *dst, unsigned long start)
+{
+	unsigned long	i;
+
 	i = 0;
-	while (i < position)
-		result[i++] = *cursor++;
-	cursor_sub = sub;
-	while (*cursor_sub)
-		result[i++] = *cursor_sub++;
-	free(sub);
-	cursor += length;
-	while (i < total_length)
-		result[i++] = *cursor++;
-	strass2(result, str);
+	while (i < length)
+	{
+		dst[start + i] = src[i];
+		i++;
+	}
+}
+
+int	strsub(t_tag *tag, t_buffer *buffer)
+{
+	unsigned long	total_length;
+	char			*str;
+
+	if (tag->range.start > buffer->size)
+		return (1);
+	total_length = buffer->size - tag->range.length + tag->result.size;
+	if (malloc2(total_length + 1, &str))
+		return (2);
+	str[total_length] = 0;
+	strins(buffer->str, tag->range.start, str, 0);
+	strins(tag->result.str, tag->result.size, str, tag->range.start);
+	strins(buffer->str + tag->range.start + tag->range.length, buffer->size - tag->range.start - tag->range.length, str, tag->range.start + tag->result.size);
+	strass2(str, &buffer->str);
 	return (0);
 }
 
 int	substitute(t_tag *tag, t_buffer *buffer)
 {
-	if (strsub2(tag->range.start, tag->range.length,
-			tag->result.str, &buffer->str))
-		return (1);
-	buffer->size_virtual += tag->result.size_virtual;
-	buffer->size_actual += tag->result.size_actual;
+	if (strsub(tag, buffer))
+		return (free(tag->result.str), 1);
+	free(tag->result.str);
+	buffer->size += tag->result.size - tag->range.length;
+	buffer->cursor += tag->result.size;
+	// printf("== %zu '%s'\n", tag->result.size, buffer->str);
 	return (0);
 }
 
@@ -359,16 +391,22 @@ int	run(va_list args, t_buffer *buffer)
 
 	while (1)
 	{
+		// printf("ya-0\n");
 		if (advance_cursor(buffer))
 			return (0);
+		// printf("ya-1 %d\n", parse_tag(buffer, &tag));
 		if (parse_tag(buffer, &tag))
 			return (1);
+		// printf("ya-2\n");
 		if (evaluate(args, &tag))
 			return (2);
+		// printf("ya0\n");
 		if (apply_flags(&tag))
 			return (3);
+		// printf("ya1\n");
 		if (substitute(&tag, buffer))
 			return (4);
+		// printf("ya2\n");
 	}
 	return (0);
 }
@@ -383,7 +421,18 @@ int	ft_printf(const char *format, ...)
 		return (-1);
 	if (run(args, &buffer))
 		return (-1);
-	write(1, buffer.str, buffer.size_actual);
+	// printf("after %zu\n", buffer.size);
+	write(1, buffer.str, buffer.size);
+
+	// printf("%s\n", buffer.str);
+
+	// for (size_t i = 0; i <= buffer.size; i++)
+	// {
+	// 	printf("%03d ", buffer.str[i]);
+	// }
+
+	// printf("\n");
+
 	free(buffer.str);
-	return (buffer.size_virtual);
+	return (buffer.size);
 }

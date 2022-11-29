@@ -6,12 +6,12 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 09:42:32 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/27 14:17:15 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/29 10:38:39 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "libft/libft.h"
+#include "libft.h"
 
 #include <stdio.h>
 
@@ -112,7 +112,7 @@ static int	parse_specifier(t_tag *tag, t_buffer *buffer)
 int	parse_tag(t_buffer *buffer, t_tag *tag)
 {
 	init_tag(tag);
-	tag->range.start = buffer->size_actual;
+	tag->range.start = buffer->cursor;
 	tag->range.length = 1;
 	parse_flags(tag, buffer);
 	parse_padding(tag, buffer);
