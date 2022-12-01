@@ -1,7 +1,7 @@
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -I include -g
 NAME=libftprintf.a
-SRC=ft_printf.c parse.c buffer.c eval.c eval_utils.c specifier_checks.c prefix.c
+SRC=ft_printf.c parse.c buffer.c eval.c eval_utils.c specifier_checks.c prefix.c tag.c eval/char.c eval/hex.c eval/int.c eval/str.c eval/unsigned.c math/math.c
 OBJ=$(SRC:.c=.o)
 INCLUDES=include/ft_printf.h libft/libft.h
 
@@ -26,10 +26,11 @@ test: compile
 	./a.out
 
 clean:
-	rm -f *.o
+	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f a.out
 
 re: fclean all
 
