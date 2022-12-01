@@ -6,14 +6,14 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 10:13:42 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/29 13:11:49 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/30 13:54:27 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "libft.h"
 
-static int	recurse_base(unsigned long long value, char *base,
+static int	recurse_base(unsigned long value, char *base,
 	size_t base_size, char *buffer)
 {
 	int	depth;
@@ -27,7 +27,7 @@ static int	recurse_base(unsigned long long value, char *base,
 	return (0);
 }
 
-static int	recurse_setup(unsigned long long value, char *base, char *buffer)
+static int	recurse_setup(unsigned long value, char *base, char *buffer)
 {
 	if (value == 0)
 	{
@@ -37,7 +37,7 @@ static int	recurse_setup(unsigned long long value, char *base, char *buffer)
 	return (recurse_base(value, base, ft_strlen(base), buffer));
 }
 
-int	itoa_base2(unsigned long long value, char *base, char **str)
+int	itoa_base2(unsigned long value, char *base, char **str)
 {
 	int		depth;
 
@@ -51,9 +51,6 @@ int	itoa_base2(unsigned long long value, char *base, char **str)
 
 void	set_result_str(char *str, t_tag *tag)
 {
-	size_t	length;
-
-	length = ft_strlen(str);
 	tag->result.str = str;
-	tag->result.size = length;
+	tag->result.size = ft_strlen(str);
 }

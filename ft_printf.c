@@ -6,19 +6,13 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:52:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/29 11:44:27 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/11/30 14:11:52 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include "ft_printf.h"
 #include "libft.h"
-
-
-#include <stdio.h>
-
 
 void	strass2(char *src, char **dst)
 {
@@ -57,59 +51,9 @@ int	advance_cursor(t_buffer *buffer)
 	return (!c);
 }
 
-void	init_tag(t_tag *tag)
-{
-	tag->properties.left_justify = 0;
-	tag->properties.plus = 0;
-	tag->properties.space = 0;
-	tag->properties.prefix = 0;
-	tag->properties.zeroes = 0;
-	tag->properties.padding = 0;
-	tag->properties.precision = -1;
-	tag->properties.specifier = 0;
-	tag->range.start = 0;
-	tag->range.length = 0;
-	tag->result.str = NULL;
-	tag->result.prefix = PREFIX_EMPTY;
-	tag->result.size = 0;
-}
-
-int	max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
-}
-
-int	min(int a, int b)
-{
-	if (a < b)
-		return (a);
-	return (b);
-}
-
 int	ignores_precision(char c)
 {
 	return (c == 'c' || c == '%');
-}
-
-int evaluate(va_list args, t_tag *tag)
-{
-	if (is_char_specifier(tag))
-		return (eval_char(va_arg(args, int), tag));
-	if (is_str_specifier(tag))
-		return (eval_str(va_arg(args, char *), tag));
-	if (is_ptr_specifier(tag))
-		return (eval_hex(va_arg(args, unsigned long), tag));
-	if (is_hex_specifier(tag))
-		return (eval_hex(va_arg(args, unsigned int), tag));
-	if (is_int_specifier(tag))
-		return (eval_int(va_arg(args, int), tag));
-	if (is_unsigned_specifier(tag))
-		return (eval_unsigned(va_arg(args, unsigned int), tag));
-	if (is_percent_specifier(tag))
-		return (eval_char('%', tag));
-	return (1);
 }
 
 int	padstr2(int padding, int right, int zeroes, t_result *result)
@@ -120,7 +64,6 @@ int	padstr2(int padding, int right, int zeroes, t_result *result)
 	char	*new;
 	char	c;
 
-	// printf("%zu\n", result->size_virtual);
 	length = result->size;
 	offset = padding - length;
 	if (offset <= 0)
@@ -155,7 +98,6 @@ int apply_precision(t_tag *tag)
 		return (0);
 	if (tag->properties.specifier == 's')
 	{
-		// difference = ft_strlen(tag->result.str) - tag->properties.precision;
 		difference = tag->result.size - tag->properties.precision;
 		if (difference > 0)
 			tag->result.size -= difference;
@@ -165,7 +107,6 @@ int apply_precision(t_tag *tag)
 	}
 	if (is_char_specifier(tag) || is_percent_specifier(tag))
 		return (0);
-	// printf("%c\n", tag->properties.specifier);
 	if (padstr2(tag->properties.precision, 0, 1, &tag->result))
 		return (2);
 	return (0);
@@ -226,45 +167,6 @@ int	apply_padding(t_padding_space leave_space, t_tag *tag)
 	return (0);
 }
 
-// int	strsub2(unsigned long position, size_t length, char *sub, char **str)
-// {
-// 	unsigned long	i;
-// 	size_t			str_length;
-// 	size_t			sub_length;
-// 	size_t			total_length;
-// 	char			*result;
-// 	char			*cursor;
-// 	char			*cursor_sub;
-
-// 	str_length = ft_strlen(*str);
-// 	if (position > str_length)
-// 		return (1);
-// 	if (str_length - position < length)
-// 		length = str_length - position;
-// 	sub_length = ft_strlen(sub);
-// 	total_length = str_length - length + sub_length;
-// 	if (malloc2(total_length + 1, &result))
-// 		return (2);
-// 	result[total_length] = 0;
-// 	cursor = *str;
-// 	i = 0;
-// 	while (i < position)
-// 		result[i++] = *cursor++;
-// 	cursor_sub = sub;
-// 	printf("AAAAA %zu %zu %zu\n", i, position, length);
-// 	while (i - position < length)
-// 	{
-// 		result[i] = sub[i - position];
-// 		i++;
-// 	}
-// 	free(sub);
-// 	cursor += length;
-// 	while (i < total_length)
-// 		result[i++] = *cursor++;
-// 	strass2(result, str);
-// 	return (0);
-// }
-
 void	strins(char *src, size_t length, char *dst, unsigned long start)
 {
 	unsigned long	i;
@@ -299,64 +201,10 @@ int	substitute(t_tag *tag, t_buffer *buffer)
 {
 	if (strsub(tag, buffer))
 		return (free(tag->result.str), 1);
-	free(tag->result.str);
-	buffer->size += tag->result.size - tag->range.length;
-	buffer->cursor += tag->result.size;
-	// printf("== %zu '%s'\n", tag->result.size, buffer->str);
+	free_tag(tag);
+	modify_buffer_size_and_cursor(tag, buffer);
 	return (0);
 }
-
-// int	get_length_after_precision(t_tag *tag)
-// {
-// 	if (is_str_specifier(tag))
-// 		return (min(tag->result.size_virtual, tag->properties.precision));
-// 	return (max(tag->result.size_virtual, tag->properties.precision));
-// }
-
-// int	get_length_after_prefix(t_tag *tag, size_t length)
-// {
-// 	return (length + get_prefix_length(tag->result.prefix));
-// }
-
-// int	get_length_after_padding(t_tag *tag, size_t length)
-// {
-// 	return (max(length, tag->properties.padding));
-// }
-
-// int	prepare_str(t_tag *tag)
-// {
-// 	size_t	length;
-
-// 	length = get_length_after_precision(tag);
-// 	length = get_length_after_length(tag, length);
-// 	length = get_length_after_padding(tag, length);
-// 	if (malloc2(length + 1, &tag->result.str))
-// 		return (1);
-// 	return (0);
-// }
-
-// int	strins2(char *src, unsigned int start, size_t length, char **dst)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (i < length && src[i] && (*dst)[i + start])
-// 	{
-// 		(*dst)[i + start] = src[i];
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
-// int	insert_str(t_tag *tag)
-// {
-// 	size_t length;
-
-// 	length = tag->result.size_virtual;
-// 	if (is_str_specifier(tag))
-// 		length = get_length_after_precision(tag);
-
-// }
 
 int	is_padding_between_prefix_and_str(t_tag *tag)
 {
@@ -391,22 +239,16 @@ int	run(va_list args, t_buffer *buffer)
 
 	while (1)
 	{
-		// printf("ya-0\n");
 		if (advance_cursor(buffer))
 			return (0);
-		// printf("ya-1 %d\n", parse_tag(buffer, &tag));
 		if (parse_tag(buffer, &tag))
 			return (1);
-		// printf("ya-2\n");
 		if (evaluate(args, &tag))
 			return (2);
-		// printf("ya0\n");
 		if (apply_flags(&tag))
-			return (3);
-		// printf("ya1\n");
+			return (free_tag(&tag), 3);
 		if (substitute(&tag, buffer))
-			return (4);
-		// printf("ya2\n");
+			return (free_tag(&tag), 4);
 	}
 	return (0);
 }
@@ -420,19 +262,9 @@ int	ft_printf(const char *format, ...)
 	if (init_buffer(format, &buffer))
 		return (-1);
 	if (run(args, &buffer))
-		return (-1);
-	// printf("after %zu\n", buffer.size);
+		return (free_buffer(&buffer), -1);
+	va_end(args);
 	write(1, buffer.str, buffer.size);
-
-	// printf("%s\n", buffer.str);
-
-	// for (size_t i = 0; i <= buffer.size; i++)
-	// {
-	// 	printf("%03d ", buffer.str[i]);
-	// }
-
-	// printf("\n");
-
-	free(buffer.str);
+	free_buffer(&buffer);
 	return (buffer.size);
 }

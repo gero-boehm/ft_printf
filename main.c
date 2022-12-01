@@ -25,11 +25,12 @@ void	print_tag(t_tag *tag)
 	printf("  result:\n");
 	printf("    str:           '%s'\n", tag->result.str);
 	printf("    prefix:        '%s'\n", prefixes[tag->result.prefix]);
-	// printf("    size_virtual:  %zu\n", tag->result.size_virtual);
-	// printf("    size_actual:   %zu\n", tag->result.size_actual);
 	printf("    size:          %zu\n", tag->result.size);
 	printf("}\n");
 }
+
+void *_malloc = malloc;
+
 
 int	main(void)
 {
@@ -487,9 +488,6 @@ int	main(void)
 		int b = ft_printf("%-58.131%");
 		printf("\nl: %d\n", b);
 	}
-
-	ft_printf("%.10%\n");
-
 
 	// {
 	// 	const char *format = "d";
