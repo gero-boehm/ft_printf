@@ -34,7 +34,10 @@ compile: $(OBJ) main.o $(LIBFT)
 test: compile
 	./a.out
 
-tclean: fclean
+tclean: clean
+	rm -f main.o
+
+tfclean: tclean
 	rm -f a.out
 
 .PHONY:
