@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   eval.c                                             :+:      :+:    :+:   */
+/*   run.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/30 14:04:05 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/12/01 11:09:51 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "ft_printf.h"
+
+int	advance_cursor(t_buffer *buffer)
+{
+	char	c;
+
+	c = buffer->str[buffer->cursor];
+	while (c && c != '%')
+		c = buffer->str[++buffer->cursor];
+	return (!c);
+}
 
 int	evaluate(va_list args, t_tag *tag)
 {
@@ -29,4 +40,13 @@ int	evaluate(va_list args, t_tag *tag)
 	if (is_percent_specifier(tag))
 		return (eval_char('%', tag));
 	return (100);
+}
+
+int	substitute(t_tag *tag, t_buffer *buffer)
+{
+	if (strsub(tag, buffer))
+		return (free(tag->result.str), 1);
+	free_tag(tag);
+	modify_buffer_size_and_cursor(tag, buffer);
+	return (0);
 }

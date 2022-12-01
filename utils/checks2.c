@@ -1,31 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   specifier_checks.c                                 :+:      :+:    :+:   */
+/*   checks2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/26 09:49:14 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/30 11:51:30 by gbohm            ###   ########.fr       */
+/*   Created: 2022/12/01 11:02:23 by gbohm             #+#    #+#             */
+/*   Updated: 2022/12/01 11:03:10 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-int	is_char_specifier(t_tag *tag)
-{
-	return (tag->properties.specifier == 'c');
-}
-
-int	is_str_specifier(t_tag *tag)
-{
-	return (tag->properties.specifier == 's');
-}
-
-int	is_ptr_specifier(t_tag *tag)
-{
-	return (tag->properties.specifier == 'p');
-}
 
 int	is_hex_lower_specifier(t_tag *tag)
 {
@@ -42,18 +27,14 @@ int	is_hex_specifier(t_tag *tag)
 	return (is_hex_lower_specifier(tag) || is_hex_upper_specifier(tag));
 }
 
-int	is_int_specifier(t_tag *tag)
+int	is_ptr_specifier(t_tag *tag)
 {
-	return (tag->properties.specifier == 'd'
-		|| tag->properties.specifier == 'i');
+	return (tag->properties.specifier == 'p');
 }
 
-int	is_unsigned_specifier(t_tag *tag)
+int	is_num_specifier(t_tag *tag)
 {
-	return (tag->properties.specifier == 'u');
-}
-
-int	is_percent_specifier(t_tag *tag)
-{
-	return (tag->properties.specifier == '%');
+	return (is_hex_specifier(tag)
+		|| is_unsigned_specifier(tag)
+		|| is_int_specifier(tag));
 }

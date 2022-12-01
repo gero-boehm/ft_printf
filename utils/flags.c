@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unsigned.c                                         :+:      :+:    :+:   */
+/*   flags.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/30 13:53:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/12/01 13:33:48 by gbohm            ###   ########.fr       */
+/*   Created: 2022/12/01 13:34:25 by gbohm             #+#    #+#             */
+/*   Updated: 2022/12/01 13:49:21 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	eval_unsigned(unsigned int value, t_tag *tag)
+int	has_left_justify_flag(t_tag *tag)
 {
-	char	*str;
+	return (tag->properties.left_justify);
+}
 
-	if (value == 0 && tag->properties.precision == 0)
-	{
-		if (strdup2("", &str))
-			return (1);
-	}
-	else
-	{
-		if (itoa_base2(value, "0123456789", &str))
-			return (2);
-	}
-	set_result_str(str, tag);
-	return (0);
+int	has_plus_flag(t_tag *tag)
+{
+	return (tag->properties.plus);
+}
+
+int	has_space_flag(t_tag *tag)
+{
+	return (tag->properties.space);
+}
+
+int	has_prefix_flag(t_tag *tag)
+{
+	return (tag->properties.prefix);
+}
+
+int	has_zeroes_flag(t_tag *tag)
+{
+	return (tag->properties.zeroes);
 }

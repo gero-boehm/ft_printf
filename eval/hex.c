@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 11:44:08 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/30 14:00:12 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/12/01 10:17:24 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 static int	get_base(t_tag *tag, char **str)
 {
-	if (tag->properties.specifier == 'X')
+	if (is_hex_upper_specifier(tag))
 	{
-		if (strdup2("0123456789abcdef", str))
+		if (strdup2("0123456789ABCDEF", str))
 			return (1);
 	}
 	else

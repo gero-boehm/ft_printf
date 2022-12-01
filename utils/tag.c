@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 11:22:36 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/30 14:00:52 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/12/01 13:34:09 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,39 +33,4 @@ void	init_tag(t_tag *tag)
 void	free_tag(t_tag *tag)
 {
 	free(tag->result.str);
-}
-
-int	has_left_justify_flag(t_tag *tag)
-{
-	return (tag->properties.left_justify);
-}
-
-int	has_plus_flag(t_tag *tag)
-{
-	return (tag->properties.plus);
-}
-
-int	has_space_flag(t_tag *tag)
-{
-	return (tag->properties.space);
-}
-
-int	has_prefix_flag(t_tag *tag)
-{
-	return (tag->properties.prefix);
-}
-
-int	has_zeroes_flag(t_tag *tag)
-{
-	return (tag->properties.zeroes);
-}
-
-int	has_padding(t_tag *tag)
-{
-	return (tag->properties.padding > 0);
-}
-
-int	has_precision(t_tag *tag)
-{
-	return (tag->properties.precision >= 0);
 }

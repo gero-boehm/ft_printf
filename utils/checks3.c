@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unsigned.c                                         :+:      :+:    :+:   */
+/*   checks3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/30 13:53:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/12/01 13:33:48 by gbohm            ###   ########.fr       */
+/*   Created: 2022/11/26 09:49:14 by gbohm             #+#    #+#             */
+/*   Updated: 2022/12/01 11:03:08 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	eval_unsigned(unsigned int value, t_tag *tag)
+int	is_specifier(char c)
 {
-	char	*str;
+	return (c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i'
+		|| c == 'u' || c == 'x' || c == 'X' || c == '%');
+}
 
-	if (value == 0 && tag->properties.precision == 0)
-	{
-		if (strdup2("", &str))
-			return (1);
-	}
-	else
-	{
-		if (itoa_base2(value, "0123456789", &str))
-			return (2);
-	}
-	set_result_str(str, tag);
-	return (0);
+int	is_flag(char c)
+{
+	return (c == '-' || c == '+' || c == ' ' || c == '#' || c == '0');
 }

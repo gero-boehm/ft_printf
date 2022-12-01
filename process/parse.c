@@ -6,27 +6,12 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/17 09:42:32 by gbohm             #+#    #+#             */
-/*   Updated: 2022/11/29 10:38:39 by gbohm            ###   ########.fr       */
+/*   Updated: 2022/12/01 10:16:13 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "libft.h"
-
-#include <stdio.h>
-
-int	is_flag(char c)
-{
-	return (c == '-' || c == '+' || c == ' ' || c == '#' || c == '0');
-}
-
-static char	get_char(t_tag *tag, t_buffer *buffer)
-{
-	unsigned int	i;
-
-	i = tag->range.start + tag->range.length;
-	return (buffer->str[i]);
-}
 
 static int	parse_flags(t_tag *tag, t_buffer *buffer)
 {
@@ -89,12 +74,6 @@ static int	parse_precision(t_tag *tag, t_buffer *buffer)
 	}
 	tag->properties.precision = precision;
 	return (0);
-}
-
-int	is_specifier(char c)
-{
-	return (c == 'c' || c == 's' || c == 'p' || c == 'd' || c == 'i'
-		|| c == 'u' || c == 'x' || c == 'X' || c == '%');
 }
 
 static int	parse_specifier(t_tag *tag, t_buffer *buffer)

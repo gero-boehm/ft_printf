@@ -1,31 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unsigned.c                                         :+:      :+:    :+:   */
+/*   str2.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/30 13:53:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/12/01 13:33:48 by gbohm            ###   ########.fr       */
+/*   Created: 2022/12/01 10:38:43 by gbohm             #+#    #+#             */
+/*   Updated: 2022/12/01 13:15:26 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include <stdlib.h>
 
-int	eval_unsigned(unsigned int value, t_tag *tag)
+void	strass2(char *src, char **dst)
 {
-	char	*str;
+	free(*dst);
+	*dst = src;
+}
 
-	if (value == 0 && tag->properties.precision == 0)
+void	strins(char *src, size_t length, char *dst, unsigned long start)
+{
+	unsigned long	i;
+
+	i = 0;
+	while (i < length)
 	{
-		if (strdup2("", &str))
-			return (1);
+		dst[start + i] = src[i];
+		i++;
 	}
-	else
+}
+
+void	strfll(char c, size_t length, char *dst, unsigned long start)
+{
+	unsigned long	i;
+
+	i = 0;
+	while (i < length)
 	{
-		if (itoa_base2(value, "0123456789", &str))
-			return (2);
+		dst[start + i] = c;
+		i++;
 	}
-	set_result_str(str, tag);
-	return (0);
 }

@@ -1,38 +1,41 @@
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -I include -g
 NAME=libftprintf.a
-SRC=ft_printf.c parse.c buffer.c eval.c eval_utils.c specifier_checks.c prefix.c tag.c eval/char.c eval/hex.c eval/int.c eval/str.c eval/unsigned.c math/math.c
+SRC=eval/char.c eval/hex.c eval/int.c eval/str.c eval/unsigned.c process/apply.c process/parse.c process/run.c src/ft_printf.c utils/buffer.c utils/checks.c utils/checks2.c utils/checks3.c utils/eval.c utils/flags.c utils/flags2.c utils/malloc.c utils/math.c utils/prefix.c utils/str.c utils/str2.c utils/tag.c
 OBJ=$(SRC:.c=.o)
-INCLUDES=include/ft_printf.h libft/libft.h
+LIBFT=libft/libft.a
+INCLUDES=include/ft_printf.h include/libft.h
 
 all: $(NAME)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-libft/libft.a :
+$(LIBFT) :
 	(cd libft && make && make clean)
 
-$(NAME): $(OBJ) | libft/libft.a
-	cp libft/libft.a $@
+$(NAME): $(OBJ) | $(LIBFT)
+	cp $(LIBFT) $@
 	ar -crs $@ $^
 
 bonus: all
-
-compile: $(OBJ) main.o libft/libft.a
-	$(CC) $(CFLAGS) $^
-
-test: compile
-	./a.out
 
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
-	rm -f a.out
 
 re: fclean all
 
+compile: $(OBJ) main.o $(LIBFT)
+	$(CC) $(CFLAGS) $^
+
+test: compile
+	./a.out
+
+tclean: fclean
+	rm -f a.out
+
 .PHONY:
-	all bonus clean fclean re compile test
+	all bonus clean fclean re compile test tclean
