@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:52:13 by gbohm             #+#    #+#             */
-/*   Updated: 2022/12/01 10:45:14 by gbohm            ###   ########.fr       */
+/*   Updated: 2023/03/12 19:35:13 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	ft_printf(const char *format, ...)
 {
 	va_list		args;
 	t_buffer	buffer;
+	size_t		printed;
 
 	va_start(args, format);
 	if (init_buffer(format, &buffer))
@@ -45,7 +46,7 @@ int	ft_printf(const char *format, ...)
 	if (run(args, &buffer))
 		return (free_buffer(&buffer), -1);
 	va_end(args);
-	write(1, buffer.str, buffer.size);
+	printed = write(1, buffer.str, buffer.size);
 	free_buffer(&buffer);
-	return (buffer.size);
+	return (printed);
 }

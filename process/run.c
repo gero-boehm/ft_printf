@@ -6,7 +6,7 @@
 /*   By: gbohm <gbohm@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 16:08:12 by gbohm             #+#    #+#             */
-/*   Updated: 2022/12/01 11:09:51 by gbohm            ###   ########.fr       */
+/*   Updated: 2023/03/12 19:42:16 by gbohm            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	evaluate(va_list args, t_tag *tag)
 int	substitute(t_tag *tag, t_buffer *buffer)
 {
 	if (strsub(tag, buffer))
-		return (free(tag->result.str), 1);
+		return (1);
 	free_tag(tag);
 	modify_buffer_size_and_cursor(tag, buffer);
 	return (0);
