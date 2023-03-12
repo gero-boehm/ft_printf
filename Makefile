@@ -1,24 +1,24 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -I include -g
+CFLAGS=-Wall -Wextra -Werror -I include -I libft -g
 NAME=libftprintf.a
 SRC=eval/char.c eval/hex.c eval/int.c eval/str.c eval/unsigned.c process/apply.c process/parse.c process/run.c src/ft_printf.c utils/buffer.c utils/checks.c utils/checks2.c utils/checks3.c utils/eval.c utils/flags.c utils/flags2.c utils/malloc.c utils/math.c utils/prefix.c utils/str.c utils/str2.c utils/tag.c
 OBJ=$(SRC:.c=.o)
 LIBFT=libft/libft.a
-INCLUDES=include/ft_printf.h include/libft.h
+HEADERS=libft/libft.h
 
 all: $(NAME)
 
-%.o: %.c
+%.o: %.c $(HEADERS) $(LIBFT) Makefile
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-$(LIBFT) :
+$(LIBFT):
 	(cd libft && make && make clean)
 
-$(NAME): $(OBJ) | $(LIBFT)
+$(NAME): $(LIBFT) $(OBJ)
 	cp $(LIBFT) $@
-	ar -crs $@ $^
+	ar -crs $@ $(OBJ)
 
-bonus: all
+# bonus: all
 
 clean:
 	rm -f $(OBJ)
@@ -28,7 +28,7 @@ fclean: clean
 
 re: fclean all
 
-compile: $(OBJ) main.o $(LIBFT)
+compile: $(LIBFT) $(OBJ) main.o
 	$(CC) $(CFLAGS) $^
 
 test: compile
