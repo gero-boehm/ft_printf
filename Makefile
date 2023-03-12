@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -I include -I libft -g
+CFLAGS=-Wall -Wextra -Werror -I include -I libft
 NAME=libftprintf.a
 SRC=eval/eval_char.c eval/eval_hex.c eval/eval_int.c eval/eval_str.c eval/eval_unsigned.c process/apply.c process/parse.c process/run.c src/ft_printf.c utils/buffer.c utils/checks.c utils/checks2.c utils/checks3.c utils/eval.c utils/flags.c utils/flags2.c utils/malloc.c utils/math.c utils/prefix.c utils/str.c utils/str2.c utils/tag.c
 OBJ=$(SRC:.c=.o)
